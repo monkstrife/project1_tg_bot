@@ -1,5 +1,5 @@
 import telebot
-import os
+import os, json, string
 
 #token = os.getenv('TOKEN')
 bot = telebot.TeleBot('5318034841:AAE8LwugFT2Ne-cRpFH6QdJ0mD398M2WiYU')
@@ -30,7 +30,10 @@ def work_schedule(message):
 #################### Общая часть ########################
 
 @bot.message_handler()
-def start(message):
-    pass
+def mat_filter(message):
+    if {i.lower().translate(str.maketrans('', '', string.punctuation)) for i in message.text.split(' ')}\
+    .intersection(set(json.load(open('cenz.json')))):
+        bot.send_message(message.from_user.id, '<u><b>Маты запрещены!</b></u>', parse_mode='html')
+        bot.delete_message(message.chat.id, message.id)
 
 bot.polling(non_stop=True)
