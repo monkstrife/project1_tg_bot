@@ -1,4 +1,4 @@
 venv/
-base_data.txt
-to_json.py
 __pycache__/
+database.txt
+toJson.py
