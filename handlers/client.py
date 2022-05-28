@@ -1,7 +1,10 @@
+from codecs import ignore_errors
+from typing import Text
 from aiogram import types, Dispatcher
 from create_bot import bot
 from keyboards import keyboard_client
 from aiogram.types import ReplyKeyboardRemove
+from aiogram.dispatcher.filters import Text
 
 # func start working
 async def start(message: types.Message):
@@ -17,20 +20,19 @@ async def help(message: types.Message):
 
 # func getting work schedule
 async def get_work_schedule(message: types.Message):
-    if(message.text == 'Режим работы'):
-        await bot.send_message(message.from_user.id, '<b>Режим работы: <u>с 7:00 до 18:00</u></b>', parse_mode='html', reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(message.from_user.id, '<b>Режим работы: <u>с 7:00 до 18:00</u></b>', parse_mode='html', reply_markup=ReplyKeyboardRemove())
 
 # func getting addres
 async def get_address(message: types.Message):
-    if(message.text == 'Адрес'):
-        await bot.send_message(message.from_user.id, '<b>Адрес: <u>ул. Авилова</u></b>', parse_mode='html', reply_markup=ReplyKeyboardRemove())
+    await bot.send_message(message.from_user.id, '<b>Адрес: <u>ул. Авилова</u></b>', parse_mode='html', reply_markup=ReplyKeyboardRemove())
 
-async def launch_func(message: types.Message):
+"""async def launch_func(message: types.Message):
     if(message.from_user.id == message.chat.id):
         await get_work_schedule(message)
-        await get_address(message)
+        await get_address(message)"""
 
 def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start'])
     dp.register_message_handler(help, commands=['help'])
-    dp.register_message_handler(launch_func, content_types=['text'])
+    dp.register_message_handler(get_work_schedule, Text(equals='Режим работы', ignore_case=True))
+    dp.register_message_handler(get_address, Text(equals='Адрес', ignore_case=True))
