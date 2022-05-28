@@ -15,21 +15,21 @@ async def start(message: types.Message):
 
 # func "help"
 async def help(message: types.Message):
-    if(message.from_user.id == message.chat.id):
-        await bot.send_message(message.from_user.id, '<b><u>Выберите команду</u></b>', parse_mode='html', reply_markup=keyboard_client)
+    await bot.send_message(message.from_user.id, '<b><u>Выберите команду</u></b>', parse_mode='html', reply_markup=keyboard_client)
+    if(message.from_user.id != message.chat.id):
+        await message.delete()
 
 # func getting work schedule
 async def get_work_schedule(message: types.Message):
     await bot.send_message(message.from_user.id, '<b>Режим работы: <u>с 7:00 до 18:00</u></b>', parse_mode='html', reply_markup=ReplyKeyboardRemove())
+    if(message.from_user.id != message.chat.id):
+        await message.delete()
 
 # func getting addres
 async def get_address(message: types.Message):
     await bot.send_message(message.from_user.id, '<b>Адрес: <u>ул. Авилова</u></b>', parse_mode='html', reply_markup=ReplyKeyboardRemove())
-
-"""async def launch_func(message: types.Message):
-    if(message.from_user.id == message.chat.id):
-        await get_work_schedule(message)
-        await get_address(message)"""
+    if(message.from_user.id != message.chat.id):
+        await message.delete()
 
 def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start'])
