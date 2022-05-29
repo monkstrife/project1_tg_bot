@@ -6,7 +6,17 @@ from keyboards import keyboard_admin
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher.filters import Text
 
+admins_id_array = set()
+
+async def moderator(message: types.Message):
+    global admins_id_array
+    admins_id_array.add(message.from_user.id)
+    await bot.send_message(message.from_user.id, '<b><u>Теперь вы можете модерировать бота!</u></b>', parse_mode='html', reply_markup=keyboard_admin)
+    await message.delete()
+
 async def help_admin(message: types.Message):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     if(message.chat.id != message.from_user.id):
         await message.delete()
     await bot.send_message(message.from_user.id, '<b>Введите команду . . .</b>', parse_mode='html', reply_markup=keyboard_admin)
@@ -19,11 +29,15 @@ class FSMAdmin(StatesGroup):
 
 # Start state machie
 async def sm_start(message: types.Message):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     await FSMAdmin.photo.set()
     await message.reply("Загрузи фото")
 
 # Handler of cancel
 async def cancel_handler(message: types.Message, state=FSMContext):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     current_state = await state.get_state()
     if(current_state is None):
         return
@@ -32,6 +46,8 @@ async def cancel_handler(message: types.Message, state=FSMContext):
 
 # Get the 1st answer (Photo)
 async def load_photo(message: types.Message, state=FSMContext):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     async with state.proxy() as data:
         data['photo'] = message.photo[0].file_id
     await FSMAdmin.next()
@@ -39,6 +55,8 @@ async def load_photo(message: types.Message, state=FSMContext):
 
 # Get the 2nd answer (name)
 async def load_name(message: types.Message, state=FSMContext):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     async with state.proxy() as data:
         data['name'] = message.text
     await FSMAdmin.next()
@@ -46,6 +64,8 @@ async def load_name(message: types.Message, state=FSMContext):
 
 # Get the 3rd answer (description)
 async def load_description(message: types.Message, state=FSMContext):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     async with state.proxy() as data:
         data['description'] = message.text
     await FSMAdmin.next()
@@ -53,6 +73,8 @@ async def load_description(message: types.Message, state=FSMContext):
 
 # Get the 4th answer (description) and clear state machine
 async def load_price(message: types.Message, state=FSMContext):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
     async with state.proxy() as data:
         data['price'] = float(message.text)
     async with state.proxy() as data:
@@ -60,6 +82,7 @@ async def load_price(message: types.Message, state=FSMContext):
     await state.finish()
 
 def register_handler_admin(dp: Dispatcher):
+    dp.register_message_handler(moderator, commands=['moderator'], is_chat_admin=True)
     dp.register_message_handler(help_admin, commands=['help_admin'])
     dp.register_message_handler(sm_start, Text(equals='Загрузить', ignore_case=True), state=None)
     dp.register_message_handler(cancel_handler, Text(equals='Остановить', ignore_case=True), state=FSMAdmin)
