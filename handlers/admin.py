@@ -5,6 +5,7 @@ from create_bot import bot
 from keyboards import keyboard_admin
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher.filters import Text
+from data_base import sqlite_db
 
 admins_id_array = set()
 
@@ -77,8 +78,7 @@ async def load_price(message: types.Message, state=FSMContext):
         return
     async with state.proxy() as data:
         data['price'] = float(message.text)
-    async with state.proxy() as data:
-        await message.reply(str(data))
+    await sqlite_db.sql_add_command(state)
     await state.finish()
 
 def register_handler_admin(dp: Dispatcher):

@@ -5,6 +5,7 @@ from create_bot import bot
 from keyboards import keyboard_client
 from aiogram.types import ReplyKeyboardRemove
 from aiogram.dispatcher.filters import Text
+from data_base import sqlite_db
 
 # func start working
 async def start(message: types.Message):
@@ -31,8 +32,15 @@ async def get_address(message: types.Message):
     if(message.from_user.id != message.chat.id):
         await message.delete()
 
+# func getting menu
+async def get_menu(message: types.Message):
+    await sqlite_db.sql_read(message)
+    if(message.from_user.id != message.chat.id):
+        await message.delete()
+
 def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start'])
     dp.register_message_handler(help, commands=['help'])
     dp.register_message_handler(get_work_schedule, Text(equals='Режим работы', ignore_case=True))
     dp.register_message_handler(get_address, Text(equals='Адрес', ignore_case=True))
+    dp.register_message_handler(get_menu, Text(equals='Меню', ignore_case=True))
