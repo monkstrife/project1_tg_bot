@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram import types, Dispatcher
 from create_bot import bot
 from keyboards import keyboard_admin
-from aiogram.types import ReplyKeyboardRemove
+from aiogram.types import ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.dispatcher.filters import Text
 from data_base import sqlite_db
 
@@ -81,6 +81,19 @@ async def load_price(message: types.Message, state=FSMContext):
     await sqlite_db.sql_add_command(state)
     await state.finish()
 
+# func delete item menu for admin
+async def delete_item(message: types.Message):
+    if admins_id_array.intersection(set([message.from_user.id])) == set():
+        return
+    read = await sqlite_db.sql_read()
+    for item in read:
+        await bot.send_photo(message.from_user.id, item[0], f'Название: {item[1]}\nОписание: {item[2]}\n\
+Цена: {item[3]}', reply_markup=InlineKeyboardMarkup().add(InlineKeyboardButton(text='Удалить', callback_data=f'del {item[1]}')))
+
+async def del_callback_run(callback: types.CallbackQuery):
+    await sqlite_db.sql_delete(callback.data.replace('del ', ''))
+    await callback.answer(text=f'{callback.data.replace("del ", "")} Удален', show_alert=True)
+
 def register_handler_admin(dp: Dispatcher):
     dp.register_message_handler(moderator, commands=['moderator'], is_chat_admin=True)
     dp.register_message_handler(help_admin, commands=['help_admin'])
@@ -90,3 +103,5 @@ def register_handler_admin(dp: Dispatcher):
     dp.register_message_handler(load_name, state=FSMAdmin.name)
     dp.register_message_handler(load_description, state=FSMAdmin.description)
     dp.register_message_handler(load_price, state=FSMAdmin.price)
+    dp.register_message_handler(delete_item, Text(equals='Показать весь список', ignore_case=True))
+    dp.register_callback_query_handler(del_callback_run, lambda x: x.data and x.data.startswith('del '))

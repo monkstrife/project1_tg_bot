@@ -16,7 +16,14 @@ async def sql_add_command(state):
         cur.execute('INSERT INTO menu VALUES (?, ?, ?, ?)', tuple(data.values()))
         base.commit()
 
-async def sql_read(message):
+async def sql_read_to_print(message):
     for element_db in cur.execute('SELECT * FROM menu').fetchall():
         await bot.send_photo(message.from_user.id, element_db[0], f'Название: {element_db[1]}\nОписание: {element_db[2]}\n\
 Цена: {element_db[3]}', parse_mode='html', reply_markup=ReplyKeyboardRemove())
+
+async def sql_read():
+    return cur.execute('SELECT * FROM menu').fetchall()
+
+async def sql_delete(name):
+    cur.execute('DELETE FROM menu WHERE name == ?', (name,))
+    base.commit()

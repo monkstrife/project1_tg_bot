@@ -33,7 +33,7 @@ async def get_address(message: types.Message):
 
 # func getting menu
 async def get_menu(message: types.Message):
-    await sqlite_db.sql_read(message)
+    await sqlite_db.sql_read_to_print(message)
     if(message.from_user.id != message.chat.id):
         await message.delete()
 
