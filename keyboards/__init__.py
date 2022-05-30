@@ -1,2 +1,2 @@
-from keyboards.client_kb import keyboard_client
-from keyboards.admin_kb import keyboard_admin
+from keyboards.client_kb import keyboard_client, keyboard_client_catalog
+from keyboards.admin_kb import keyboard_admin, keyboard_admin_database, keyboard_admin_cancel_machine, keyboard_admin_delete_db

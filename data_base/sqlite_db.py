@@ -1,29 +1,26 @@
 import sqlite3 as sq
-from create_bot import bot
-from aiogram.types import ReplyKeyboardRemove
 
-def sql_start():
-    global base, cur
-    base = sq.connect('products.db')
-    cur = base.cursor()
-    if base:
+base = {}
+
+# database for catalog
+def sql_start(text):
+    base[text] = sq.connect(f'{text}.db')
+    if base[text]:
         print('Data base connected OK!')
-    base.execute('CREATE TABLE IF NOT EXISTS menu(img TEXT, name TEXT PRIMARY KEY, description TEXT, price TEXT)')
-    base.commit()
+    base[text].execute('CREATE TABLE IF NOT EXISTS menu(img TEXT, name TEXT PRIMARY KEY, description TEXT, price TEXT)')
+    base[text].commit()
 
-async def sql_add_command(state):
+async def sql_add_command(state, text):
     async with state.proxy() as data:
+        cur = base[text].cursor()
         cur.execute('INSERT INTO menu VALUES (?, ?, ?, ?)', tuple(data.values()))
-        base.commit()
+        base[text].commit()
 
-async def sql_read_to_print(message):
-    for element_db in cur.execute('SELECT * FROM menu').fetchall():
-        await bot.send_photo(message.from_user.id, element_db[0], f'Название: {element_db[1]}\nОписание: {element_db[2]}\n\
-Цена: {element_db[3]}', parse_mode='html', reply_markup=ReplyKeyboardRemove())
-
-async def sql_read():
+async def sql_read(text):
+    cur = base[text].cursor()
     return cur.execute('SELECT * FROM menu').fetchall()
 
-async def sql_delete(name):
+async def sql_delete(name, text):
+    cur = base[text].cursor()
     cur.execute('DELETE FROM menu WHERE name == ?', (name,))
-    base.commit()
+    base[text].commit()
