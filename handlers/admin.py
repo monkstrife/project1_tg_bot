@@ -42,6 +42,7 @@ async def sm_start(callback: types.CallbackQuery):
     name_db = callback.data.replace("Admin show catalog ", "")
     await FSMAdmin.photo.set()
     await callback.message.answer('Загрузи фото', reply_markup=keyboard_admin_cancel_machine)
+    await callback.answer()
 
 # Handler of cancel
 async def cancel_handler(message: types.Message, state=FSMContext):
