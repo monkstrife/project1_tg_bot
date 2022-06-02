@@ -1,5 +1,5 @@
 from keyboards.client_kb import keyboard_client, keyboard_client_catalog
 from keyboards.client_kb import menu_start_state_init, menu_state_with_back, menu_start_state_with_description
-from keyboards.client_kb import change_basket_state
+from keyboards.client_kb import change_basket_state, confirmation_state, cancel_state, confirm_state
 
 from keyboards.admin_kb import keyboard_admin, keyboard_admin_database, keyboard_admin_cancel_machine, keyboard_admin_delete_db
