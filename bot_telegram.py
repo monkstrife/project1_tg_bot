@@ -20,4 +20,4 @@ admin.register_handler_admin(dp)
 # Other part
 other.register_handler_other(dp)
 
-executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+executor.start_polling(dp, skip_updates=True)
