@@ -1,10 +1,4 @@
 venv/
 __pycache__/
-database.txt
 to_json.py
-admin_key.json
 admin_to_json.py
-chemical.db
-devices.db
-fertilizers.db
-seeds.db
