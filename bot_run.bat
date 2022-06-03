@@ -1,8 +1,6 @@
 @echo off
 
-call %~dp0telegram_bot_project\venv\Scripts\activate
-
-cd %~dp0telegram_bot_project
+call %~dp0venv\Scripts\activate
 
 set TOKEN=5318034841:AAE8LwugFT2Ne-cRpFH6QdJ0mD398M2WiYU
 
