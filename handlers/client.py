@@ -99,7 +99,7 @@ async def confirm_order(callback: types.CallbackQuery):
         parse_mode='html')
     client[callback.from_user.id].content[split_data[1]][split_data[2]] = 1
     await callback.message.edit_reply_markup(reply_markup=await confirm_state(callback))
-    await callback.answer()
+    await callback.answer(text='Заказ отправлен на обработку.\nОжидайте звонка.', show_alert=True)
 
 async def cancel_order(callback: types.CallbackQuery):
     await callback.message.edit_reply_markup(reply_markup=await cancel_state(callback))

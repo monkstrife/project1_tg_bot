@@ -111,6 +111,7 @@ async def del_callback_run(callback: types.CallbackQuery):
     global name_db
     await sqlite_db.sql_delete(callback.data.replace("del ", ""), name_db)
     await callback.answer(text=f'{callback.data.replace("del ", "")} Удален', show_alert=True)
+    await bot.delete_message(callback.from_user.id, callback.message.message_id)
 
 def register_handler_admin(dp: Dispatcher):
     dp.register_message_handler(moderator, commands=['moderator'], is_chat_admin=True)
