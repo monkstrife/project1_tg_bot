@@ -2,7 +2,6 @@ venv/
 __pycache__/
 to_json.py
 admin_to_json.py
-
 chemical.db
 database.txt
 devices.db
