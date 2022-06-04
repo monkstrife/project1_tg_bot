@@ -1,3 +1,4 @@
+from posixpath import split
 from typing import Text
 from aiogram import types, Dispatcher
 from create_bot import bot
@@ -61,11 +62,15 @@ async def get_menu(callback: types.CallbackQuery):
     await callback.answer()
 
 async def get_description(callback: types.CallbackQuery):
-    await callback.message.edit_caption(f'Описание: {callback.data.replace("description ", "")}',
+    split_data = callback.data.split()
+    descr = await sqlite_db.sql_get_description(split_data[2], split_data[1])
+    await callback.message.edit_caption(f'Описание: {descr[0]}',
     reply_markup=await menu_state_with_back(callback))
 
 async def get_reverse(callback: types.CallbackQuery):
-    await callback.message.edit_caption(f'{callback.data.replace("reverse ", "")}', parse_mode='html',
+    split_data = callback.data.split()
+    price = await sqlite_db.sql_get_price(split_data[2], split_data[1])
+    await callback.message.edit_caption(f'Название: {split_data[2]}\nЦена: {price[0]}', parse_mode='html',
     reply_markup=await menu_start_state_with_description(callback))
 
 async def add_basket(callback: types.CallbackQuery):

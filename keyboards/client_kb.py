@@ -25,15 +25,16 @@ inl_clien_button_cancel = {}
 async def menu_start_state_init(callback, item, id):
     global inl_clien_button_description, inl_clien_button_basket
     inline_client_keyboard = InlineKeyboardMarkup()
-    inl_clien_button_description[id] = InlineKeyboardButton(text='Описание', callback_data=f'description {item[2]}')
+    inl_clien_button_description[id] = InlineKeyboardButton(text='Описание', callback_data=f'description {callback.data.replace("Client catalog ", "")} {item[1]}')
     inl_clien_button_basket["main"][id] = InlineKeyboardButton(text='Добавить в корзину', callback_data=f'add in basket {callback.data.replace("Client catalog ", "")} {item[1]}')
     inline_client_keyboard.add(inl_clien_button_description[id]).add(inl_clien_button_basket["main"][id])
     return inline_client_keyboard
 
 async def menu_state_with_back(callback):
     global inl_clien_button_description, inl_clien_button_basket, inl_client_button_send_basket
+    split_data = callback.data.split()
     inline_client_keyboard = InlineKeyboardMarkup()
-    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='↩️ Назад', callback_data=f'reverse {callback.message.caption}')
+    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='↩️ Назад', callback_data=f'reverse {split_data[1]} {split_data[2]}')
     inline_client_keyboard.add(inl_clien_button_description[callback.message.message_id])
     if inl_clien_button_basket['-'].get(callback.message.message_id) is None:
         inline_client_keyboard.add(inl_clien_button_basket["main"][callback.message.message_id])
@@ -49,8 +50,9 @@ async def menu_state_with_back(callback):
 
 async def menu_start_state_with_description(callback):
     global inl_clien_button_description, inl_clien_button_basket, inl_client_button_send_basket
+    split_data = callback.data.split()
     inline_client_keyboard = InlineKeyboardMarkup()
-    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='Описание', callback_data=f'description {callback.message.caption.replace("Описание: ", "")}')
+    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='Описание', callback_data=f'description {split_data[1]} {split_data[2]}')
     inline_client_keyboard.add(inl_clien_button_description[callback.message.message_id])
     if inl_clien_button_basket['-'].get(callback.message.message_id) is None:
         inline_client_keyboard.add(inl_clien_button_basket["main"][callback.message.message_id])
