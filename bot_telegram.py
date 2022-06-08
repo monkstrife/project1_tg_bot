@@ -3,13 +3,15 @@ from create_bot import dp
 from handlers import client, admin, other
 from data_base import sqlite_db
 
-# on startup fuc
+# on startup func
 async def on_startup(_):
     print("Бот вышел в онлайн")
-    sqlite_db.sql_start('chemical')
-    sqlite_db.sql_start('devices')
-    sqlite_db.sql_start('fertilizers')
-    sqlite_db.sql_start('seeds')
+    sqlite_db.sql_start()
+
+# on shutdown func
+async def on_shutdown(_):
+    print("Бот отключен")
+    sqlite_db.sql_finish()
 
 # Client part
 client.register_handler_client(dp)
@@ -20,4 +22,4 @@ admin.register_handler_admin(dp)
 # Other part
 other.register_handler_other(dp)
 
-executor.start_polling(dp, on_startup=on_startup, skip_updates=True)
+executor.start_polling(dp, on_startup=on_startup, on_shutdown=on_shutdown, skip_updates=True)
