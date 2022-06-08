@@ -62,26 +62,26 @@ async def get_menu(callback: types.CallbackQuery):
     await callback.answer()
 
 async def get_description(callback: types.CallbackQuery):
-    split_data = callback.data.split()
+    split_data = callback.data.split(" | ")
     descr = await sqlite_db.sql_get_description(split_data[2], split_data[1])
     await callback.message.edit_caption(f'Описание: {descr[0]}',
     reply_markup=await menu_state_with_back(callback))
 
 async def get_reverse(callback: types.CallbackQuery):
-    split_data = callback.data.split()
+    split_data = callback.data.split(" | ")
     price = await sqlite_db.sql_get_price(split_data[2], split_data[1])
     await callback.message.edit_caption(f'Название: {split_data[2]}\nЦена: {price[0]}', parse_mode='html',
     reply_markup=await menu_start_state_with_description(callback))
 
 async def add_basket(callback: types.CallbackQuery):
-    split_data = callback.data.split()
+    split_data = callback.data.split(" | ")
     client[callback.from_user.id].add(split_data[3], split_data[4])
     await callback.message.edit_reply_markup(reply_markup=await change_basket_state(callback, client[callback.from_user.id].content[split_data[3]][split_data[4]]))
     await callback.answer()
 
 
 async def remove_basket(callback: types.CallbackQuery):
-    split_data = callback.data.split()
+    split_data = callback.data.split(" | ")
     if client[callback.from_user.id].content[split_data[3]][split_data[4]] == 0:
         await callback.answer()
         return
@@ -90,7 +90,7 @@ async def remove_basket(callback: types.CallbackQuery):
     await callback.answer()
 
 async def send_basket(callback: types.CallbackQuery):
-    split_data = callback.data.split()
+    split_data = callback.data.split(" | ")
     if client[callback.from_user.id].content[split_data[2]][split_data[3]] == 0:
         await callback.answer()
         return
@@ -98,7 +98,7 @@ async def send_basket(callback: types.CallbackQuery):
     await callback.answer()
 
 async def confirm_order(callback: types.CallbackQuery):
-    split_data = callback.data.split()
+    split_data = callback.data.split(" | ")
     await bot.send_message(951719191, f"<b>От <u>{callback.from_user.first_name} {callback.from_user.username}</u> поступил заказ:</b>\n\
     Из раздела <u>{split_data[1]}</u> продукт <u>{split_data[2]}</u> в кол-ве: <i><b>{client[callback.from_user.id].content[split_data[1]][split_data[2]]}</b></i>",
         parse_mode='html')
@@ -116,13 +116,13 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(get_inforamation, Text(equals='🔎 О компании 🔍', ignore_case=True))
     dp.register_message_handler(get_catalog, Text(equals='🗂 Каталог 🗂', ignore_case=True))
 
-    dp.register_callback_query_handler(get_menu, lambda x: x.data and x.data.startswith('Client catalog '))
+    dp.register_callback_query_handler(get_menu, lambda x: x.data and x.data.startswith('Client | catalog '))
     dp.register_callback_query_handler(get_description, lambda x: x.data and x.data.startswith('description '))
     dp.register_callback_query_handler(get_reverse, lambda x: x.data and x.data.startswith('reverse '))
 
-    dp.register_callback_query_handler(add_basket, lambda x: x.data and x.data.startswith('add in basket '))
-    dp.register_callback_query_handler(remove_basket, lambda x: x.data and x.data.startswith('remove from basket '))
-    dp.register_callback_query_handler(send_basket, lambda x: x.data and x.data.startswith('send basket '))
+    dp.register_callback_query_handler(add_basket, lambda x: x.data and x.data.startswith('add | in | basket '))
+    dp.register_callback_query_handler(remove_basket, lambda x: x.data and x.data.startswith('remove | from | basket '))
+    dp.register_callback_query_handler(send_basket, lambda x: x.data and x.data.startswith('send | basket '))
 
     dp.register_callback_query_handler(confirm_order, lambda x: x.data and x.data.startswith('confirm '))
     dp.register_callback_query_handler(cancel_order, lambda x: x.data and x.data == 'cancel')

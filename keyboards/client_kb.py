@@ -25,8 +25,8 @@ inl_clien_button_cancel = {}
 async def menu_start_state_init(callback, item, id):
     global inl_clien_button_description, inl_clien_button_basket
     inline_client_keyboard = InlineKeyboardMarkup()
-    inl_clien_button_description[id] = InlineKeyboardButton(text='Описание', callback_data=f'description {callback.data.replace("Client catalog ", "")} {item[1]}')
-    inl_clien_button_basket["main"][id] = InlineKeyboardButton(text='Добавить в корзину', callback_data=f'add in basket {callback.data.replace("Client catalog ", "")} {item[1]}')
+    inl_clien_button_description[id] = InlineKeyboardButton(text='Описание', callback_data=f'description | {callback.data.replace("Client catalog ", "")} | {item[1]}')
+    inl_clien_button_basket["main"][id] = InlineKeyboardButton(text='Добавить в корзину', callback_data=f'add | in | basket | {callback.data.replace("Client catalog ", "")} | {item[1]}')
     inline_client_keyboard.add(inl_clien_button_description[id]).add(inl_clien_button_basket["main"][id])
     return inline_client_keyboard
 
@@ -34,7 +34,7 @@ async def menu_state_with_back(callback):
     global inl_clien_button_description, inl_clien_button_basket, inl_client_button_send_basket
     split_data = callback.data.split()
     inline_client_keyboard = InlineKeyboardMarkup()
-    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='↩️ Назад', callback_data=f'reverse {split_data[1]} {split_data[2]}')
+    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='↩️ Назад', callback_data=f'reverse | {split_data[1]} | {split_data[2]}')
     inline_client_keyboard.add(inl_clien_button_description[callback.message.message_id])
     if inl_clien_button_basket['-'].get(callback.message.message_id) is None:
         inline_client_keyboard.add(inl_clien_button_basket["main"][callback.message.message_id])
@@ -52,7 +52,7 @@ async def menu_start_state_with_description(callback):
     global inl_clien_button_description, inl_clien_button_basket, inl_client_button_send_basket
     split_data = callback.data.split()
     inline_client_keyboard = InlineKeyboardMarkup()
-    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='Описание', callback_data=f'description {split_data[1]} {split_data[2]}')
+    inl_clien_button_description[callback.message.message_id] = InlineKeyboardButton(text='Описание', callback_data=f'description | {split_data[1]} | {split_data[2]}')
     inline_client_keyboard.add(inl_clien_button_description[callback.message.message_id])
     if inl_clien_button_basket['-'].get(callback.message.message_id) is None:
         inline_client_keyboard.add(inl_clien_button_basket["main"][callback.message.message_id])
@@ -71,9 +71,9 @@ async def change_basket_state(callback, count):
     global inl_clien_button_description, inl_clien_button_basket, inl_client_button_send_basket
     inline_client_keyboard = InlineKeyboardMarkup()
     split_data = callback.data.split()
-    inl_client_button_send_basket[callback.message.message_id] = InlineKeyboardButton(text="Заказать", callback_data=f'send basket {split_data[3]} {split_data[4]}')
-    inl_clien_button_basket['-'][callback.message.message_id] = InlineKeyboardButton(text="➖", callback_data=f'remove from basket {split_data[3]} {split_data[4]}')
-    inl_clien_button_basket['+'][callback.message.message_id] = InlineKeyboardButton(text="➕", callback_data=f'add in basket {split_data[3]} {split_data[4]}')
+    inl_client_button_send_basket[callback.message.message_id] = InlineKeyboardButton(text="Заказать", callback_data=f'send | basket | {split_data[3]} | {split_data[4]}')
+    inl_clien_button_basket['-'][callback.message.message_id] = InlineKeyboardButton(text="➖", callback_data=f'remove | from | basket | {split_data[3]} | {split_data[4]}')
+    inl_clien_button_basket['+'][callback.message.message_id] = InlineKeyboardButton(text="➕", callback_data=f'add | in | basket | {split_data[3]} | {split_data[4]}')
     inl_clien_button_basket['main'][callback.message.message_id] = InlineKeyboardButton(text=f"{count}", callback_data=f'count')
     inline_client_keyboard.add(inl_clien_button_description[callback.message.message_id]).\
         row(inl_clien_button_basket["-"][callback.message.message_id],
@@ -86,7 +86,7 @@ async def confirmation_state(callback):
     global inl_clien_button_description, inl_clien_button_conf, inl_clien_button_cancel
     inline_client_keyboard = InlineKeyboardMarkup()
     split_data = callback.data.split()
-    inl_clien_button_conf[callback.message.message_id] = InlineKeyboardButton(text="Подтвердить заказ", callback_data=f'confirm  {split_data[2]} {split_data[3]}')
+    inl_clien_button_conf[callback.message.message_id] = InlineKeyboardButton(text="Подтвердить заказ", callback_data=f'confirm | {split_data[2]} | {split_data[3]}')
     inl_clien_button_cancel[callback.message.message_id] = InlineKeyboardButton(text="Отменить заказ", callback_data='cancel')
     inline_client_keyboard.add(inl_clien_button_description[callback.message.message_id]).\
         add(inl_clien_button_conf[callback.message.message_id]).\
