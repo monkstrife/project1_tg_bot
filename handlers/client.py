@@ -116,7 +116,7 @@ def register_handler_client(dp: Dispatcher):
     dp.register_message_handler(get_inforamation, Text(equals='🔎 О компании 🔍', ignore_case=True))
     dp.register_message_handler(get_catalog, Text(equals='🗂 Каталог 🗂', ignore_case=True))
 
-    dp.register_callback_query_handler(get_menu, lambda x: x.data and x.data.startswith('Client | catalog '))
+    dp.register_callback_query_handler(get_menu, lambda x: x.data and x.data.startswith('Client catalog '))
     dp.register_callback_query_handler(get_description, lambda x: x.data and x.data.startswith('description '))
     dp.register_callback_query_handler(get_reverse, lambda x: x.data and x.data.startswith('reverse '))
 
