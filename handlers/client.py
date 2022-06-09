@@ -66,12 +66,14 @@ async def get_description(callback: types.CallbackQuery):
     descr = await sqlite_db.sql_get_description(split_data[2], split_data[1])
     await callback.message.edit_caption(f'Описание: {descr[0]}',
     reply_markup=await menu_state_with_back(callback))
+    await callback.answer()
 
 async def get_reverse(callback: types.CallbackQuery):
     split_data = callback.data.split(" | ")
     price = await sqlite_db.sql_get_price(split_data[2], split_data[1])
     await callback.message.edit_caption(f'Название: {split_data[2]}\nЦена: {price[0]}', parse_mode='html',
     reply_markup=await menu_start_state_with_description(callback))
+    await callback.answer()
 
 async def add_basket(callback: types.CallbackQuery):
     split_data = callback.data.split(" | ")
